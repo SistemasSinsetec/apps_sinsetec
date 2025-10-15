@@ -24,6 +24,8 @@ export class App {
 
     //Si el textarea está vacío, se cancela la función y se muestra el error.
     if (lines.length < 1) {
+      //lines.length cuenta cuantas lineas hay y tiene que ser al menos 1
+      //si es menor a 1, muestra un mensaje de error y usa el return para detener la funcion anteas de continuar.
       //Comprueba que al menos haya una línea escrita.
       this.resultado = 'Error: debes escribir el código de operación y los datos necesarios.';
       return;
@@ -38,9 +40,11 @@ export class App {
 
     //login
     if (codigoOperacion === '0x03') {
-      //comparación estricta (triple igual) a string '0x03'.
+      //si la primera linea es 0x03, el usuario quiere hacer un login
+      //en el if si haya al menos 3 lineas
       if (lines.length < 3) {
-        //para login necesitas 2 datos extra además del código de operación, mínimo 3 líneas totales.
+        //si hay menos de 3 lineas, muestra un mensaje de error
+        //necesitas 2 datos extra más del código de operación, mínimo 3 líneas totales
         this.resultado = 'Error: faltan campos para LOGIN (usuario y contraseña)'; //mensaje de error
         return;
       }
