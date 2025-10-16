@@ -1,21 +1,60 @@
-<h1>Consulta</h1>
-<div class="main-form-container">
-  <div class="form-group">
-    <label for="consulta">subir informacion</label>
-    <textarea name="consulta" id="consulta" cols="50" rows="5" [(ngModel)]="consulta"></textarea>
-  </div>
-  <div class="contenedor-boton">
-    <button name="button" (click)="enviar()">Enviar</button>
-  </div>
-  <div class="form-group">
-    <label for="resultado">resultado </label>
-    <textarea
-      name="resultado"
-      id="resultado"
-      cols="50"
-      rows="5"
-      [value]="resultado"
-      readonly
-    ></textarea>
-  </div>
+<h1>Inicio de Sesión</h1>
+
+<div class="form-container">
+  <label for="loginUser">Usuario:</label>
+  <input id="loginUser" type="text" placeholder="Ingresa tu usuario" [(ngModel)]="loginUser" />
+
+  <label for="loginPass">Contraseña:</label>
+  <input
+    id="loginPass"
+    type="password"
+    placeholder="Ingresa tu contraseña"
+    [(ngModel)]="loginPass"
+  />
+
+  <button (click)="login()">Entrar</button>
+</div>
+
+<hr />
+
+<h1>Registro de Usuario</h1>
+
+<div class="form-container">
+  <label for="regUser">Usuario:</label>
+  <input id="regUser" type="text" placeholder="Crea un nombre de usuario" [(ngModel)]="regUser" />
+
+  <label for="regPass">Contraseña:</label>
+  <input id="regPass" type="password" placeholder="Crea una contraseña" [(ngModel)]="regPass" />
+
+  <label for="regMail">Correo:</label>
+  <input id="regMail" type="email" placeholder="Correo electrónico" [(ngModel)]="regMail" />
+
+  <label for="regName">Nombre:</label>
+  <input id="regName" type="text" placeholder="Tu nombre" [(ngModel)]="regName" />
+
+  <label for="regLast">Apellido:</label>
+  <input id="regLast" type="text" placeholder="Tu apellido" [(ngModel)]="regLast" />
+
+  <button (click)="register()">Registrar</button>
+</div>
+
+<hr />
+
+<h1>Recuperar Contraseña</h1>
+
+<div class="form-container">
+  <label for="resetUser">Usuario:</label>
+  <input id="resetUser" type="text" placeholder="Tu nombre de usuario" [(ngModel)]="resetUser" />
+
+  <label for="resetMail">Correo:</label>
+  <input id="resetMail" type="email" placeholder="Tu correo registrado" [(ngModel)]="resetMail" />
+
+  <button (click)="resetPassword()">Enviar recuperación</button>
+</div>
+
+<hr />
+
+<div class="resultado">
+  <h2>Resultado</h2>
+  <p>{{ resultado }}</p>
 </div>

@@ -1,101 +1,104 @@
 import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.html',
-  styleUrl: './app.css',
+  styleUrls: ['./app.css'],
   standalone: true,
   imports: [FormsModule],
 })
 export class App {
-  consulta: string = ''; //guarda el texto de la consulta
-  resultado: string = ''; //guarda el resultado
+  resetPassword() {
+    this.enviar(
+      //se envian los datos al backend
+      [
+        //se define un array de pares clave-valor que representan los campos del formulario
+        ['0x02', '0x07'],
+        ['0x03', this.resetUser],
+        ['0x06', this.resetMail],
+      ],
+      'recuperación'
+    );
+  }
 
-  constructor(private http: HttpClient) {} //inyecta el servicio de httpclient para hecer la peticion HTTP
+  login() {
+    this.enviar(
+      [
+        //se envian los datos al backend
+        ['0x02', '0x03'],
+        ['0x03', this.loginUser],
+        ['0x11', this.loginPass],
+      ],
+      'login'
+    );
+  }
+  register() {
+    this.enviar(
+      [
+        //se envian los datos al backend
+        ['0x02', '0x05'],
+        ['0x03', this.regUser],
+        ['0x12', this.regPass],
+        ['0x06', this.regMail],
+        ['0x04', this.regName],
+        ['0x05', this.regLast],
+      ],
+      'registro'
+    );
+  }
+  //estas son las variables que están siendo usadas en el formulario
+  // Datos
+  loginUser = ''; // Usuario de login
+  loginPass = ''; // Contraseña de login
+  regUser = ''; // Usuario de registro
+  regPass = ''; // Contraseña de registro
+  regMail = ''; // Correo de registro
+  regName = ''; // Nombre de registro
+  regLast = ''; // Apellido de registro
+  resetUser = ''; // Usuario de recuperación
+  resetMail = ''; // Correo de recuperación
+  resultado = ''; // Resultado de la operación
+  private api = 'https://apps.sinsetec.com.mx/sst-svc-servicios/';
 
-  enviar() {
-    //funciona para enviar la consulta
-    const lines = this.consulta
-      .split('\n') //divide el texto en lineas
-      .map((line) => line.trim()) //elimina los espacios
-      .filter((line) => line); //elimina las lineas vacias
+  // Método para enviar datos al backend
+  async enviar(campos: [string, string][], tipo: string) {
+    const f = new FormData(); //se crea un nuevo objeto FormData
+    f.append('0x01', ''); //es un campo (vacio) necesario por que el backend lo espera
+    if (location.hostname.includes('localhost')) f.append('0xfa', 'true');
+    //se agrega un campo adicional si se está en localhost
+    campos.forEach(([k, v]) => f.append(k, v));
+    //se agregan los campos proporcionados al FormData
 
-    //Si el textarea está vacío, se cancela la función y se muestra el error.
-    if (lines.length < 1) {
-      //lines.length cuenta cuantas lineas hay y tiene que ser al menos 1
-      //si es menor a 1, muestra un mensaje de error y usa el return para detener la funcion anteas de continuar.
-      //Comprueba que al menos haya una línea escrita.
-      this.resultado = 'Error: debes escribir el código de operación y los datos necesarios.';
-      return;
+    try {
+      //se intenta ejecutar el bloque de codigo
+      const res = await fetch(this.api, { method: 'POST', body: f }); //se envia la solicitud al backend
+      //si la respuesta no es exitosa, se lanza un error
+      if (!res.ok) throw new Error(`HTTP ${res.status} - ${res.statusText}`);
+      //si la respuesta es exitosa, se procesa el texto de la respuesta
+      const txt = await res.text();
+      this.resultado = JSON.stringify(this.parse(txt), null, 2); //se intenta interpretar la respuesta
+    } catch (e: any) {
+      //si ocurre un error, se captura aquí
+      this.resultado = `❌ Error en ${tipo}: ${e.message}`; //se muestra un mensaje de error
     }
-    // La primera línea siempre será el código de operación (0x03, 0x05, etc.)
-    const codigoOperacion = lines[0]; //codigoOperacion guarda el primer valor de la primera linea
-    const formData = new FormData(); //se crea un nuevo objeto formdata
-
-    // Campo base siempre requerido
-    formData.append('0x01', ''); // Token vacío
-    formData.append('0x02', codigoOperacion); // Código dinámico que identifica la operación a realizar
-
-    //login
-    if (codigoOperacion === '0x03') {
-      //si la primera linea es 0x03, el usuario quiere hacer un login
-      //en el if si haya al menos 3 lineas
-      if (lines.length < 3) {
-        //si hay menos de 3 lineas, muestra un mensaje de error
-        //necesitas 2 datos extra más del código de operación, mínimo 3 líneas totales
-        this.resultado = 'Error: faltan campos para LOGIN (usuario y contraseña)'; //mensaje de error
-        return;
-      }
-      formData.append('0x03', lines[1]); // Usuario
-      formData.append('0x11', lines[2]); // Contraseña/token
-    } //Envía usuario (0x03) y contraseña (0x11). El backend PHP espera exactamente esos campos.
-
-    // Registro.
-    else if (codigoOperacion === '0x05') {
-      //otra rama: registro.
-      if (lines.length < 6) {
-        //necesitas 5 datos extra más del código de operación, mínimo 6 líneas totales
-        this.resultado =
-          'Error: faltan campos para REGISTER (usuario, contraseña, correo, nombre, apellido)'; //mensaje de error
-        return;
-      }
-      formData.append('0x03', lines[1]); // Usuario
-      formData.append('0x12', lines[2]); // Nueva contraseña
-      formData.append('0x06', lines[3]); // Correo
-      formData.append('0x04', lines[4]); // Nombre
-      formData.append('0x05', lines[5]); // Apellido
+  }
+  catch(e: any) {
+    //si ocurre un error, se captura aquí
+    this.msg('Error: ' + e.message); //muestra un mensaje de error
+  }
+  private parse(t: string) {
+    //intenta interpretar la respuesta como JSON
+    try {
+      //si no es posible, la devuelve como texto plano
+      return JSON.parse(t); //intenta convertir el texto JSON en un objeto JS
+    } catch {
+      //si falla, se captura el error aquí
+      return { raw: t }; //devuelve un objeto con la respuesta original en una propiedad 'raw'
     }
-    // Muestra lo que se está enviando en consola
-    console.log('Datos enviados:', Object.fromEntries(formData.entries())); //imprime en la consola los datos enviados
-
-    // Enviar al backend
-    fetch('https://apps.sinsetec.com.mx/sst-svc-servicios/', {
-      //url del backend
-      method: 'POST', //metodo POST
-      body: formData, //envia el formulario
-    })
-      .then(async (res) => {
-        //res es la respuesta del servidor
-        const text = await res.text(); //obtiene el texto de la respuesta
-        let data: any = null; //crea una variable para almacenar los datos
-        try {
-          // intenta parsear el texto en JSON
-          data = JSON.parse(text); //almacena los datos en la variable
-        } catch {
-          // si falla, guarda el texto original
-          data = { raw: text }; //almacena el texto en la variable
-        }
-        return data; //devuelve los datos
-      })
-      .then((res) => {
-        //res es la respuesta del servidor
-        this.resultado = JSON.stringify(res, null, 2); //convierte los datos a JSON y los muestra en la consola
-      })
-      .catch((err) => {
-        //si falla
-        this.resultado = 'Error en la solicitud: ' + err.message; //mensaje de error
-      });
+  }
+  private msg(m: string) {
+    //muestra un mensaje en el área de resultado
+    this.resultado = m; //asigna el mensaje a la propiedad resultado
   }
 }

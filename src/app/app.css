@@ -1,73 +1,27 @@
-h1 {
-  color: rgb(99, 178, 209);
-  text-align: center;
-  font-size: 30px;
-  font-weight: bold;
+.form-container {
+  display: flex;
+  flex-direction: column;
+  width: 250px;
+  margin: 20px auto;
+  gap: 10px;
+}
+input {
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
 }
 button {
-  background-color: #65dbc2;
-  color: rgb(0, 0, 0);
-  padding: 14px 20px;
+  background-color: #64dec6;
   border: none;
+  padding: 8px;
   cursor: pointer;
-  width: 40%;
+  border-radius: 4px;
 }
-
-.contenedor-boton {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 20px;
-}
-
 button:hover {
-  opacity: 0.8;
+  background-color: #48bfa7;
 }
-
-.main-form-container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  background: #fff;
-  border-radius: 8px;
-}
-
-span.psw {
-  float: right;
-  padding-top: 16px;
-}
-
-.form-group label {
-  flex: 1;
-  text-align: left;
-  font-size: 1.2em;
+.msg {
+  text-align: center;
+  color: #2e8b57;
   font-weight: bold;
-}
-
-.form-group textarea {
-  flex: 2;
-  margin-left: 20px;
-  width: 100%;
-  min-width: 250px;
-  max-width: 500px;
-}
-
-.form-group {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-}
-.form-group label {
-  flex: 1;
-  text-align: left;
-  font-size: 1.5em;
-  font-weight: bold;
-}
-.form-group textarea {
-  flex: 2;
-  margin-left: 20px;
-}
-.contenedor-boton {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
 }
