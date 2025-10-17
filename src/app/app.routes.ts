@@ -1,9 +1,11 @@
 import { Routes } from '@angular/router';
-import { ServiciosComponent } from './solicitudes/servicios.component';
 import { LoginComponent } from './auth/login/login.component';
+import { RegisterComponent } from './auth/registro/register.component';
+import { ResetComponent } from './auth/password/reset.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  { path: 'servicios', component: ServiciosComponent },
+  { path: 'registro', component: RegisterComponent },
+  { path: 'password', component: ResetComponent },
 ];

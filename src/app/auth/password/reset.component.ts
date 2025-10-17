@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { AuthService } from '../../servicios/auth.service';
 
 @Component({
   selector: 'app-reset',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, RouterModule],
   templateUrl: './reset.component.html',
+  styleUrls: ['../auth-styles.css'], // ✅ Ruta al CSS compartido
 })
 export class ResetComponent {
   resetUser = '';
