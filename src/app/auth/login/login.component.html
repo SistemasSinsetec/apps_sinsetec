@@ -1,0 +1,16 @@
+<h1>Inicio de Sesión</h1>
+
+<div class="form-container">
+  <label for="loginUser">Usuario:</label>
+  <input id="loginUser" type="text" placeholder="Ingresa tu usuario" [(ngModel)]="loginUser" />
+
+  <label for="loginPass">Contraseña:</label>
+  <input
+    id="loginPass"
+    type="password"
+    placeholder="Ingresa tu contraseña"
+    [(ngModel)]="loginPass"
+  />
+
+  <button (click)="login()">Entrar</button>
+</div>

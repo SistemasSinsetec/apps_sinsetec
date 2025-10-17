@@ -1,0 +1,9 @@
+<div class="servicios-container">
+  <h2>{{ titulo }}</h2>
+  <div class="lista-servicios">
+    <div class="servicio" *ngFor="let s of servicios">
+      <h3>{{ s.nombre }}</h3>
+      <p>{{ s.descripcion }}</p>
+    </div>
+  </div>
+</div>
