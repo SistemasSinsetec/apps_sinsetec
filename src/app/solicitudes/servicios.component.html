@@ -1,9 +1,86 @@
-<div class="servicios-container">
-  <h2>{{ titulo }}</h2>
-  <div class="lista-servicios">
-    <div class="servicio" *ngFor="let s of servicios">
-      <h3>{{ s.nombre }}</h3>
-      <p>{{ s.descripcion }}</p>
+<div class="registro-container">
+  <h1>Solicitud de Servicio Técnico</h1>
+
+  <!-- Barra de progreso -->
+  <div class="steps">
+    <div [class.active]="currentStep === 1">1. Información</div>
+    <div [class.active]="currentStep === 2">2. Partidas</div>
+  </div>
+
+  <!-- Paso 1 -->
+  <section *ngIf="currentStep === 1">
+    <h2>Información General</h2>
+
+    <div class="grid">
+      <div class="field" [class.error]="isInvalid(solicitud.cliente)">
+        <label>Cliente *</label>
+        <input [(ngModel)]="solicitud.cliente" />
+      </div>
+
+      <div class="field" [class.error]="isInvalid(solicitud.solicitante)">
+        <label>Solicitante *</label>
+        <input [(ngModel)]="solicitud.solicitante" />
+      </div>
+
+      <div class="field" [class.error]="isInvalid(solicitud.representante)">
+        <label>Representante *</label>
+        <input [(ngModel)]="solicitud.representante" />
+      </div>
+
+      <div class="field">
+        <label>Ubicación</label>
+        <input [(ngModel)]="solicitud.ubicacion" />
+      </div>
+
+      <div class="field full">
+        <label>Descripción del servicio</label>
+        <textarea [(ngModel)]="solicitud.descripcionServicio"></textarea>
+      </div>
     </div>
+  </section>
+
+  <!-- Paso 2 -->
+  <section *ngIf="currentStep === 2">
+    <h2>Partidas</h2>
+    <button (click)="addPartida()">➕ Añadir partida</button>
+
+    <div *ngFor="let p of partidas; let i = index" class="partida-card">
+      <div class="partida-header">
+        <span>Partida {{ i + 1 }}</span>
+        <button *ngIf="partidas.length > 1" (click)="eliminarPartida(i)">❌</button>
+      </div>
+
+      <div class="grid">
+        <div class="field"><label>Tipo de trabajo</label><input [(ngModel)]="p.tipoTrabajo" /></div>
+        <div class="field">
+          <label>Naturaleza</label><input [(ngModel)]="p.naturalezaTrabajo" />
+        </div>
+        <div class="field"><label>Máquina</label><input [(ngModel)]="p.tipoMaquina" /></div>
+        <div class="field"><label>Fecha</label><input type="date" [(ngModel)]="p.fecha" /></div>
+        <div class="field">
+          <label>Cantidad</label><input type="number" [(ngModel)]="p.cantidad" />
+        </div>
+        <div class="field">
+          <label>Precio</label><input type="number" [(ngModel)]="p.precioUnitario" />
+        </div>
+        <div class="field full">
+          <label>Comentario</label><textarea [(ngModel)]="p.comentario"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Totales -->
+    <div class="totales">
+      <p>Subtotal: {{ subtotal | currency }}</p>
+      <p>IVA: {{ ivaTotal | currency }}</p>
+      <p>Total: {{ total | currency }}</p>
+    </div>
+  </section>
+
+  <!-- Botones -->
+  <div class="actions">
+    <button *ngIf="currentStep > 1" (click)="prevStep()">← Anterior</button>
+    <button *ngIf="currentStep < totalSteps" (click)="nextStep()">Siguiente →</button>
+    <button *ngIf="currentStep === totalSteps" (click)="onSubmit()">Guardar</button>
   </div>
 </div>
